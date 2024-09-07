@@ -45,6 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
     submitButton.addEventListener('click', () => generateResume());
 });
 
+
+
 // Adds a new form section (either for education, work experience, or skill) based on the clicked button.
 function addFormSection(containerId: string, itemClass: string) {
     const container = document.getElementById(containerId)!; // Locate the container element where new items are added
@@ -85,6 +87,8 @@ function addFormSection(containerId: string, itemClass: string) {
     container.appendChild(item);
 }
 
+
+
 // Generates the resume from the inputted data and updates the UI accordingly.
 function generateResume() {
     // Grabs the contact info from the input fields.
@@ -94,6 +98,8 @@ function generateResume() {
         phone: (document.getElementById('phone') as HTMLInputElement).value,
         address: (document.getElementById('address') as HTMLInputElement).value,
     };
+
+
 
     // Clears the education list array before adding new data to avoid duplicates.
     educationList.length = 0;
@@ -109,6 +115,8 @@ function generateResume() {
         educationList.push(edu);
     });
 
+
+
     // Same process as above but for work experience data.
     workExperienceList.length = 0;
     document.querySelectorAll('.work-experience-item').forEach(item => {
@@ -123,6 +131,8 @@ function generateResume() {
         workExperienceList.push(exp);
     });
 
+
+
     // Same process for skills data.
     skillsList.length = 0;
     document.querySelectorAll('.skill-item').forEach(item => {
@@ -134,9 +144,13 @@ function generateResume() {
         skillsList.push(skill);
     });
 
+
+
     // Select the resume output container in the DOM where the resume will be displayed.
     const resumeOutput = document.getElementById('resume-output')!;
     
+
+
     // Generate the HTML structure for the resume and inject it into the container.
     resumeOutput.innerHTML = `
         <h2>Resume</h2>
@@ -149,13 +163,13 @@ function generateResume() {
         <h3>Education</h3>
         ${educationList.map(edu => `
             <p>${edu.institution} - ${edu.degree} (${edu.startDate} to ${edu.endDate})</p>
-        `).join('')} <!-- Loops through the educationList and displays each entry -->
+        `).join('')}  <!-- Loops through the educationList and displays each entry -->
 
         <h3>Work Experience</h3>
         ${workExperienceList.map(exp => `
             <p>${exp.company} - ${exp.position} (${exp.startDate} to ${exp.endDate})</p>
             <p>${exp.description}</p>
-        `).join('')} <!-- Loops through the workExperienceList and displays each entry -->
+        `).join('')}  <!-- Loops through the workExperienceList and displays each entry -->
 
         <h3>Skills</h3>
         ${skillsList.map(skill => `
