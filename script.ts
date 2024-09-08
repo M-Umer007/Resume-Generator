@@ -3,14 +3,14 @@ type Education = {
     institution: string;
     degree: string;
     startDate: string;
-    endDate: string;
+    endDate?: string;
 };
 
 type WorkExperience = {
     company: string;
     position: string;
     startDate: string;
-    endDate: string;
+    endDate?: string;
     description: string;
 };
 
@@ -27,8 +27,18 @@ const educationList: Education[] = [];
 const workExperienceList: WorkExperience[] = [];
 const skillsList: Skill[] = [];
 
+
+
+
+
 // Wait for the DOM to load before running any script so all elements are available.
 document.addEventListener('DOMContentLoaded', () => {
+    const form = document.querySelector('form')!;
+    form.addEventListener('submit', (event) => {
+        event.preventDefault(); // Prevents the form from submitting in the traditional way
+    });
+
+
 
     // Getting references to buttons and adding event listeners to each
     const addEducationButton = document.getElementById('add-education')!;
@@ -36,6 +46,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const addSkillButton = document.getElementById('add-skill')!;
     const submitButton = document.getElementById('submit')!;
     
+
+
+
     // When these buttons are clicked, they call the function to add a form section.
     addEducationButton.addEventListener('click', () => addFormSection('education-list', 'education-item'));
     addWorkExperienceButton.addEventListener('click', () => addFormSection('work-experience-list', 'work-experience-item'));
@@ -44,6 +57,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Generate the resume when the submit button is clicked.
     submitButton.addEventListener('click', () => generateResume());
 });
+
+
 
 
 
@@ -58,6 +73,8 @@ function addFormSection(containerId: string, itemClass: string) {
         case 'education-item':
             // HTML structure for adding new education input fields
             item.innerHTML = `
+                
+
                 <input type="text" placeholder="Institution" class="education-institution">
                 <input type="text" placeholder="Degree" class="education-degree">
                 <input type="text" placeholder="Start Date" class="education-start-date">
@@ -71,7 +88,7 @@ function addFormSection(containerId: string, itemClass: string) {
                 <input type="text" placeholder="Position" class="work-position">
                 <input type="text" placeholder="Start Date" class="work-start-date">
                 <input type="text" placeholder="End Date" class="work-end-date">
-                <textarea placeholder="Description" class="work-description"></textarea>
+                <textarea placeholder="Description" class="work-description" wrap="soft" ></textarea>
             `;
             break;
         case 'skill-item':
@@ -88,9 +105,46 @@ function addFormSection(containerId: string, itemClass: string) {
 }
 
 
+// function to check the contact info filling validation
+function checkValidation():boolean{
+    const name = (document.getElementById('name') as HTMLInputElement).value.trim();
+    const email = (document.getElementById('email') as HTMLInputElement).value.trim();
+    const phone = (document.getElementById('phone') as HTMLInputElement).value.trim();
+    const address = (document.getElementById('address') as HTMLInputElement).value.trim();
+
+
+    const combine=[name ,email, phone, address];
+    const result = combine.filter((combine)=>combine.length > 0).length
+
+    return result ==4;
+    
+}
+// checks if the email ends with @gmail.com
+function emailvalidation(){
+    const email = (document.getElementById('email') as HTMLInputElement).value.trim();
+    if (email.slice(-10) !== '@gmail.com') {
+        alert ("please write correct email")
+        return false;
+    }
+    return true;
+}
+
 
 // Generates the resume from the inputted data and updates the UI accordingly.
 function generateResume() {
+
+    //checks if user has filled the contact info
+    if (!checkValidation()) {
+        alert("please fill the contact information first");
+        return;
+    }
+
+    if (!emailvalidation()) {
+        return; // Stops the function if email is not valid
+    }
+
+
+
     // Grabs the contact info from the input fields.
     const contactInfo = {
         name: (document.getElementById('name') as HTMLInputElement).value,
@@ -99,8 +153,11 @@ function generateResume() {
         address: (document.getElementById('address') as HTMLInputElement).value,
     };
 
+ 
 
 
+
+    
     // Clears the education list array before adding new data to avoid duplicates.
     educationList.length = 0;
     // Loops through all added education items and collects the values from input fields.
@@ -146,11 +203,11 @@ function generateResume() {
 
 
 
+
+
     // Select the resume output container in the DOM where the resume will be displayed.
     const resumeOutput = document.getElementById('resume-output')!;
     
-
-
     // Generate the HTML structure for the resume and inject it into the container.
     resumeOutput.innerHTML = `
         <h2>Resume</h2>
@@ -160,20 +217,21 @@ function generateResume() {
         <p>Phone: ${contactInfo.phone}</p>
         <p>Address: ${contactInfo.address}</p>
 
-        <h3>Education</h3>
+      <h3>Education</h3>
         ${educationList.map(edu => `
-            <p>${edu.institution} - ${edu.degree} (${edu.startDate} to ${edu.endDate})</p>
-        `).join('')}  <!-- Loops through the educationList and displays each entry -->
+    <p>${edu.institution}${edu.degree ? ` - ${edu.degree}` : ''} (${edu.startDate}${edu.endDate ? ` to ${edu.endDate}` : ''})</p>
+        `).join('')}<!-- Loops through the educationList and displays each entry -->
 
         <h3>Work Experience</h3>
         ${workExperienceList.map(exp => `
-            <p>${exp.company} - ${exp.position} (${exp.startDate} to ${exp.endDate})</p>
-            <p>${exp.description}</p>
-        `).join('')}  <!-- Loops through the workExperienceList and displays each entry -->
+        <p>${exp.company}${exp.position ? ` - ${exp.position}` : ''} (${exp.startDate}${exp.endDate ? ` to ${exp.endDate}` : ''})</p>
+        <p>${exp.description}</p>
+        `).join('')}<!-- Loops through the Work Experience and displays each entry -->
 
         <h3>Skills</h3>
         ${skillsList.map(skill => `
-            <p>${skill.name}: ${skill.level}</p>
-        `).join('')} <!-- Loops through the skillsList and displays each entry -->
+        <p>${skill.name}: ${skill.level}</p>
+        `).join('')}<!-- Loops through the Skills and displays each entry -->
+
     `;
 }

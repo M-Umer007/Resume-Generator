@@ -5,12 +5,13 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: auto;
     background-color: #f4f4f4;
 }
 
 .container {
     width: 80%;
+    min-height: 100vh;
     max-width: 800px;
     background: #fff;
     padding: 20px;
@@ -52,6 +53,7 @@ button:hover {
     margin-top: 20px;
 }
 
+
 .resume-container {
     border: 2px solid black; /* You can change the color as you like */
     padding: 20px; /* Add some space inside the border */
@@ -60,5 +62,7 @@ button:hover {
     max-width: 800px; /* Limit the max width of the resume */
     background-color: #f9f9f9; /* Optional: Set a background color */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Add a shadow for a 3D effect */
+    word-wrap: break-word; /* Ensure long words break and wrap */
+    overflow-wrap: break-word; /* Modern property for word wrapping */
 }
 

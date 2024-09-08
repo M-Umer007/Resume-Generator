@@ -10,13 +10,19 @@
     <div class="container">
         <h1>Resume Builder</h1>
         
+
+        <form id="resume-form">
         <section>
             <h2>Contact Information</h2>
             <input type="text" id="name" placeholder="Name">
-            <input type="email" id="email" placeholder="Email">
-            <input type="text" id="phone" placeholder="Phone">
+
+            <input type="email" id="email" placeholder="Email" pattern=".+@gmail.com" >
+        
+            <input type="tel" id="phone" placeholder="Phone" pattern="[0-9]{11}" inputmode="numeric" maxlength="11" required oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,11)">
+        
             <input type="text" id="address" placeholder="Address">
         </section>
+        
 
         <section id="education-section">
             <h2>Education</h2>
@@ -35,7 +41,7 @@
             <div id="skills-list"></div>
             <button id="add-skill">Add Skill</button>
         </section>
-
+    </form>
         <button id="submit">Submit</button>
         <div id="resume-output" class="resume-container"> </div>
 
