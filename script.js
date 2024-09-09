@@ -14,9 +14,11 @@ document.addEventListener('DOMContentLoaded', function () {
     var addSkillButton = document.getElementById('add-skill');
     var submitButton = document.getElementById('submit');
     // When these buttons are clicked, they call the function to add a form section.
-    addEducationButton.addEventListener('click', function () { return addFormSection('education-list', 'education-item'); });
-    addWorkExperienceButton.addEventListener('click', function () { return addFormSection('work-experience-list', 'work-experience-item'); });
-    addSkillButton.addEventListener('click', function () { return addFormSection('skills-list', 'skill-item'); });
+    addEducationButton.addEventListener('click', function () { return addFormSection('education-list', 'education-item'); }); //education item being added inside education list
+    addWorkExperienceButton.addEventListener('click', function () { return addFormSection('work-experience-list', 'work-experience-item'); }); //work-experience-item being added inside work experience list
+    addSkillButton.addEventListener('click', function () { return addFormSection('skills-list', 'skill-item'); }); //skill item being added inside skill list 
+    //these all items i.e education-item, work-experience-item, skill item are items stored inside addFormSection 
+    //this form section contains two params one is containerID
     // Generate the resume when the submit button is clicked.
     submitButton.addEventListener('click', function () { return generateResume(); });
 });
@@ -29,7 +31,7 @@ function addFormSection(containerId, itemClass) {
     switch (itemClass) {
         case 'education-item':
             // HTML structure for adding new education input fields
-            item.innerHTML = "\n                \n\n                <input type=\"text\" placeholder=\"Institution\" class=\"education-institution\">\n                <input type=\"text\" placeholder=\"Degree\" class=\"education-degree\">\n                <input type=\"text\" placeholder=\"Start Date\" class=\"education-start-date\">\n                <input type=\"text\" placeholder=\"End Date\" class=\"education-end-date\">\n            ";
+            item.innerHTML = "\n                \n                <input type=\"text\" placeholder=\"Institution\" class=\"education-institution\">\n                <input type=\"text\" placeholder=\"Degree\" class=\"education-degree\">\n                <input type=\"text\" placeholder=\"Start Date\" class=\"education-start-date\">\n                <input type=\"text\" placeholder=\"End Date\" class=\"education-end-date\">\n            ";
             break;
         case 'work-experience-item':
             // HTML structure for adding work experience input fields
@@ -56,14 +58,27 @@ function checkValidation() {
 // checks if the email ends with @gmail.com
 function emailvalidation() {
     var email = document.getElementById('email').value.trim();
+    var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email)) {
+        alert('please enter correct email format');
+        return false;
+    }
     if (email.slice(-10) !== '@gmail.com') {
         alert("please write correct email");
         return false;
     }
     return true;
 }
+// checks if user has typed exactly 11 digits
+function checkNumberValidation() {
+    var phoneInput = document.getElementById('phone');
+    return phoneInput.value.length === 11;
+}
 // Generates the resume from the inputted data and updates the UI accordingly.
 function generateResume() {
+    var resumeContainer = document.querySelector('.resume-container');
+    // Make the border visible after the submit button is clicked
+    resumeContainer.style.border = '2px solid black';
     //checks if user has filled the contact info
     if (!checkValidation()) {
         alert("please fill the contact information first");
@@ -79,6 +94,10 @@ function generateResume() {
         phone: document.getElementById('phone').value,
         address: document.getElementById('address').value,
     };
+    if (!checkNumberValidation()) {
+        alert("Phone Number must be 11 digits long");
+        return;
+    }
     // Clears the education list array before adding new data to avoid duplicates.
     educationList.length = 0;
     // Loops through all added education items and collects the values from input fields.
@@ -118,5 +137,5 @@ function generateResume() {
     // Select the resume output container in the DOM where the resume will be displayed.
     var resumeOutput = document.getElementById('resume-output');
     // Generate the HTML structure for the resume and inject it into the container.
-    resumeOutput.innerHTML = "\n        <h2>Resume</h2>\n        <h3>Contact Information</h3>\n        <p>Name: ".concat(contactInfo.name, "</p>\n        <p>Email: ").concat(contactInfo.email, "</p>\n        <p>Phone: ").concat(contactInfo.phone, "</p>\n        <p>Address: ").concat(contactInfo.address, "</p>\n\n      <h3>Education</h3>\n        ").concat(educationList.map(function (edu) { return "\n    <p>".concat(edu.institution).concat(edu.degree ? " - ".concat(edu.degree) : '', " (").concat(edu.startDate).concat(edu.endDate ? " to ".concat(edu.endDate) : '', ")</p>\n        "); }).join(''), "<!-- Loops through the educationList and displays each entry -->\n\n        <h3>Work Experience</h3>\n        ").concat(workExperienceList.map(function (exp) { return "\n        <p>".concat(exp.company).concat(exp.position ? " - ".concat(exp.position) : '', " (").concat(exp.startDate).concat(exp.endDate ? " to ".concat(exp.endDate) : '', ")</p>\n        <p>").concat(exp.description, "</p>\n        "); }).join(''), "<!-- Loops through the Work Experience and displays each entry -->\n\n        <h3>Skills</h3>\n        ").concat(skillsList.map(function (skill) { return "\n        <p>".concat(skill.name, ": ").concat(skill.level, "</p>\n        "); }).join(''), "<!-- Loops through the Skills and displays each entry -->\n\n    ");
+    resumeOutput.innerHTML = "\n        <h2>Resume</h2>\n        <h3>Contact Information</h3>\n        <p>Name: ".concat(contactInfo.name, "</p>\n        <p>Email: <a href=\"mailto:").concat(contactInfo.email, "\">").concat(contactInfo.email, "</a></p>\n        <p>Phone: ").concat(contactInfo.phone, "</p>\n        <p>Address: ").concat(contactInfo.address, "</p>\n\n\n      <h3>Education</h3>\n        ").concat(educationList.map(function (edu) { return "\n         <p>".concat(edu.institution).concat(edu.degree ? " - ".concat(edu.degree) : '', " (").concat(edu.startDate).concat(edu.endDate ? " - ".concat(edu.endDate) : '', ")</p>\n        "); }).join(''), "<!-- Loops through the educationList and displays each entry -->\n\n\n        <h3>Work Experience</h3>\n        ").concat(workExperienceList.map(function (exp) { return "\n        <p>".concat(exp.company).concat(exp.position ? " - ".concat(exp.position) : '', " (").concat(exp.startDate).concat(exp.endDate ? " - ".concat(exp.endDate) : '', ")</p>\n        <p>").concat(exp.description, "</p>\n        "); }).join(''), "<!-- Loops through the Work Experience and displays each entry -->\n\n\n        <h3>Skills</h3>\n        ").concat(skillsList.map(function (skill) { return "\n        <p>".concat(skill.name, ": ").concat(skill.level, "</p>\n        "); }).join(''), "<!-- Loops through the Skills and displays each entry -->\n    ");
 }

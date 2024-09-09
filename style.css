@@ -49,13 +49,16 @@ button:hover {
     background-color: #0056b3;
 }
 
-#resume-output {
+#resume-output a{
     margin-top: 20px;
+    color: black;
+    text-decoration: none;
 }
 
 
 .resume-container {
-    border: 2px solid black; /* You can change the color as you like */
+    
+    border: none; /* You can change the color as you like */
     padding: 20px; /* Add some space inside the border */
     margin: 20px auto; /* Center the resume on the page */
     width: 80%; /* Adjust the width as needed */
@@ -65,4 +68,3 @@ button:hover {
     word-wrap: break-word; /* Ensure long words break and wrap */
     overflow-wrap: break-word; /* Modern property for word wrapping */
 }
-
