@@ -61,10 +61,8 @@ document.addEventListener('DOMContentLoaded', () => {
     addWorkExperienceButton.addEventListener('click', () => addFormSection('work-experience-list', 'work-experience-item'));//work-experience-item being added inside work experience list
     addSkillButton.addEventListener('click', () => addFormSection('skills-list', 'skill-item'));//skill item being added inside skill list 
     //------------------------------------------------------------------------------------------
-
     //these all items i.e education-item, work-experience-item, skill item are items stored inside addFormSection 
     //this form section contains two params one is containerID
-    
     // Generate the resume when the submit button is clicked.
     submitButton.addEventListener('click', () => generateResume());
 });
@@ -72,25 +70,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-
+    let idCounter=0
 //------------------------------------------------------------------------------------------
 // Adds a new form section (either for education, work experience, or skill) based on the clicked button.
 function addFormSection(containerId: string, itemClass: string) {
     const container = document.getElementById(containerId)!; // Locate the container element where new items are added
     const item = document.createElement('div'); // Create a new div to hold the input fields
     item.className = itemClass; // Assign the appropriate class to the div (education-item, work-experience-item, or skill-item)
+
+    const uniqueId=`item-${idCounter++}`
 //------------------------------------------------------------------------------------------
+
+
     // Depending on the type of form being added, the content inside the div will change.
     switch (itemClass) {
         case 'education-item':
-            // HTML structure for adding new education input fields
-            item.innerHTML = `
-                
-                <input type="text" placeholder="Institution" class="education-institution">
-                <input type="text" placeholder="Degree" class="education-degree">
-                <input type="text" placeholder="Start Date" class="education-start-date">
-                <input type="text" placeholder="End Date" class="education-end-date">
-            `;
+        // HTML structure for adding new education input fields
+        item.innerHTML = `
+            <input type="text" placeholder="Institution" class="education-institution">
+            <input type="text" placeholder="Degree" class="education-degree">
+            <input type="text" placeholder="Start Date" class="education-start-date">
+            <input type="text" placeholder="End Date" class="education-end-date">
+            <button class="remove-button" data-id="${uniqueId}" style="display: inline-block;">Remove</button>
+           `;
             break;
         case 'work-experience-item':
             // HTML structure for adding work experience input fields
@@ -100,6 +102,7 @@ function addFormSection(containerId: string, itemClass: string) {
                 <input type="text" placeholder="Start Date" class="work-start-date">
                 <input type="text" placeholder="End Date" class="work-end-date">
                 <textarea placeholder="Description" class="work-description" wrap="soft" ></textarea>
+                <button class="remove-button" data-id="${uniqueId}" style="display: inline-block;">Remove</button>
             `;
             break;
         case 'skill-item':
@@ -107,13 +110,44 @@ function addFormSection(containerId: string, itemClass: string) {
             item.innerHTML = `
                 <input type="text" placeholder="Skill Name" class="skill-name">
                 <input type="text" placeholder="Skill Level" class="skill-level">
+                <button class="remove-button" data-id="${uniqueId}" style="display: inline-block;">Remove</button>
             `;
             break;
+
     }
+
+    
 //------------------------------------------------------------------------------------------
     // Add the newly created form section to the container (education-list, work-experience-list, or skills-list)
     container.appendChild(item);
+    updateRemoveButtonVisibility(containerId)
+    
+
+    const removeButton = item.querySelector('.remove-button') as HTMLButtonElement;
+    if (removeButton) {
+        removeButton.addEventListener('click', () => {
+            item.remove();
+            updateRemoveButtonVisibility(containerId);
+        });
+    }
+
+    
 }
+
+
+
+function updateRemoveButtonVisibility(containerId: string) {
+    const items = document.querySelectorAll(`.${containerId}-item`);
+    items.forEach(item => {
+        const removeButton = item.querySelector('.remove-button') as HTMLButtonElement;
+        if (removeButton) {
+            // Show remove buttons if there are more than one item
+            removeButton.classList.toggle('hidden', items.length <= 1);
+        }
+    });
+}
+
+
 //------------------------------------------------------------------------------------------
 
 
@@ -125,10 +159,11 @@ function checkValidation():boolean{
     const email = (document.getElementById('email') as HTMLInputElement).value.trim();
     const phone = (document.getElementById('phone') as HTMLInputElement).value.trim();
     const address = (document.getElementById('address') as HTMLInputElement).value.trim();
+
     const combine=[name ,email, phone, address];
     const result = combine.filter((combine)=>combine.length > 0).length
 
-    return result ==4 ;
+    return result == 4 ;
     
 }
 //------------------------------------------------------------------------------------------
@@ -168,18 +203,13 @@ function checkNumberValidation():boolean {
 // Generates the resume from the inputted data and updates the UI accordingly.
 function generateResume() {
 //------------------------------------------------------------------------------------------
-
-
 //------------------------------------------------------------------------------------------
 //will generate the border black outside outline when the resume generate button is clicked
     const resumeContainer = document.querySelector('.resume-container') as HTMLElement;
 
     // Make the border visible after the submit button is clicked
     resumeContainer.style.border = '2px solid black'; 
-
 //-------------------------------------------------------------------------------------------
-
-
 //------------------------------------------------------------------------------------------
     //checks if user has filled the contact info
     if (!checkValidation()) {
@@ -191,8 +221,6 @@ function generateResume() {
         return; // Stops the function if email is not valid
     }
 //------------------------------------------------------------------------------------------
-   
-
 //------------------------------------------------------------------------------------------
     // Grabs the contact info from the input fields.
     const contactInfo = {
@@ -206,9 +234,8 @@ function generateResume() {
         alert("Phone Number must be 11 digits long")
         return;
     }
+
 //------------------------------------------------------------------------------------------
-
-
 //------------------------------------------------------------------------------------------
     // Clears the education list array before adding new data to avoid duplicates.
     educationList.length = 0;
