@@ -59,24 +59,14 @@ function addFormSection(containerId, itemClass) {
     //------------------------------------------------------------------------------------------
     // Add the newly created form section to the container (education-list, work-experience-list, or skills-list)
     container.appendChild(item);
-    updateRemoveButtonVisibility(containerId);
+    //------------------------------------------------------------------------------------------
+    // remove button logic if it is clicked it will remove the item inside which it is clicked simple and easy right :) ;
     var removeButton = item.querySelector('.remove-button');
     if (removeButton) {
         removeButton.addEventListener('click', function () {
             item.remove();
-            updateRemoveButtonVisibility(containerId);
         });
     }
-}
-function updateRemoveButtonVisibility(containerId) {
-    var items = document.querySelectorAll(".".concat(containerId, "-item"));
-    items.forEach(function (item) {
-        var removeButton = item.querySelector('.remove-button');
-        if (removeButton) {
-            // Show remove buttons if there are more than one item
-            removeButton.classList.toggle('hidden', items.length <= 1);
-        }
-    });
 }
 //------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------

@@ -32,12 +32,11 @@ const skillsList: Skill[] = [];
 
 
 
-
-
 //------------------------------------------------------------------------------------------
 // Wait for the DOM to load before running any script so all elements are available.
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.querySelector('form')!;
+    
     form.addEventListener('submit', (event) => {
         event.preventDefault(); // Prevents the form from submitting in the traditional way
     });
@@ -78,7 +77,7 @@ function addFormSection(containerId: string, itemClass: string) {
     const item = document.createElement('div'); // Create a new div to hold the input fields
     item.className = itemClass; // Assign the appropriate class to the div (education-item, work-experience-item, or skill-item)
 
-    const uniqueId=`item-${idCounter++}`
+    const uniqueId=`item-${idCounter++}`;
 //------------------------------------------------------------------------------------------
 
 
@@ -116,38 +115,19 @@ function addFormSection(containerId: string, itemClass: string) {
 
     }
 
-    
 //------------------------------------------------------------------------------------------
     // Add the newly created form section to the container (education-list, work-experience-list, or skills-list)
     container.appendChild(item);
-    updateRemoveButtonVisibility(containerId)
     
-
+//------------------------------------------------------------------------------------------
+ // remove button logic if it is clicked it will remove the item inside which it is clicked simple and easy right :) ;
     const removeButton = item.querySelector('.remove-button') as HTMLButtonElement;
     if (removeButton) {
         removeButton.addEventListener('click', () => {
             item.remove();
-            updateRemoveButtonVisibility(containerId);
-        });
+            });
+        } 
     }
-
-    
-}
-
-
-
-function updateRemoveButtonVisibility(containerId: string) {
-    const items = document.querySelectorAll(`.${containerId}-item`);
-    items.forEach(item => {
-        const removeButton = item.querySelector('.remove-button') as HTMLButtonElement;
-        if (removeButton) {
-            // Show remove buttons if there are more than one item
-            removeButton.classList.toggle('hidden', items.length <= 1);
-        }
-    });
-}
-
-
 //------------------------------------------------------------------------------------------
 
 
